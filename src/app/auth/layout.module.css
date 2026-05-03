@@ -1,0 +1,94 @@
+.container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  background-color: var(--background);
+}
+
+.right {
+  display: none;
+  flex: 1;
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary));
+  position: relative;
+  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  color: white;
+}
+
+@media (min-width: 1024px) {
+  .right {
+    display: flex;
+  }
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.5rem;
+  letter-spacing: -0.05em;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: auto;
+}
+
+.formContainer {
+  margin: auto;
+  width: 100%;
+  max-width: 400px;
+}
+
+.testimonial {
+  position: relative;
+  z-index: 10;
+  max-width: 500px;
+}
+
+.quote {
+  font-size: 1.5rem;
+  line-height: 1.4;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-full);
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+.authorName {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.authorTitle {
+  font-size: 0.875rem;
+  opacity: 0.8;
+}
+
+.glowOrb {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+  filter: blur(40px);
+  z-index: 0;
+}
