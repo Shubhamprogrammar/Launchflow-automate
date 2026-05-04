@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { Users, Activity, DollarSign, TrendingUp, Key, FileText, Briefcase } from 'lucide-react';
+import { Users, Activity, Key, FileText, Briefcase } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { api } from '@/lib/api';
 import { Button } from '@/components/ui/Button';
@@ -28,6 +28,10 @@ interface ActivityLog {
   entityType: string;
   createdAt: string;
   metadata?: any;
+  actor?: {
+    name: string | null;
+    email: string;
+  };
 }
 
 export default function DashboardOverview() {
@@ -37,25 +41,27 @@ export default function DashboardOverview() {
   const [isLoading, setIsLoading] = useState(true);
 
   const renderActivityDescription = (log: ActivityLog) => {
-    const { action, metadata } = log;
+    const { action, metadata, actor } = log;
+    const actorName = actor?.name || actor?.email || 'Someone';
+    
     switch (action) {
       case 'WORKSPACE_CREATED':
-        return `Workspace "${metadata?.workspaceName || 'Unknown'}" created`;
+        return `Workspace "${metadata?.workspaceName || 'Unknown'}" created by ${actorName}`;
       case 'INVITE_CREATED':
-        return `Invited ${metadata?.invitedEmail || 'someone'}`;
+        return `${actorName} invited ${metadata?.invitedEmail || 'someone'}`;
       case 'INVITE_ACCEPTED':
       case 'MEMBER_JOINED':
-        return `${metadata?.joinedEmail || 'New member'} joined the workspace`;
+        return `${actorName} joined the workspace`;
       case 'API_KEY_CREATED':
-        return `New API Key "${metadata?.name || ''}" generated`;
+        return `${actorName} generated API Key "${metadata?.name || ''}"`;
       case 'API_KEY_REVOKED':
-        return `API Key revoked`;
+        return `${actorName} revoked an API Key`;
       case 'FILE_UPLOADED':
-        return `File "${metadata?.fileName || 'asset'}" uploaded`;
+        return `${actorName} uploaded "${metadata?.fileName || 'a file'}"`;
       case 'SUBSCRIPTION_UPDATED':
-        return `Plan upgraded to ${metadata?.plan || 'new tier'}`;
+        return `Plan upgraded to ${metadata?.plan || 'new tier'} by ${actorName}`;
       default:
-        return action.replace(/_/g, ' ').toLowerCase();
+        return `${actorName} performed ${action.replace(/_/g, ' ').toLowerCase()}`;
     }
   };
 

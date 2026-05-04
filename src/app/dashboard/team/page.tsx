@@ -237,7 +237,7 @@ export default function TeamPage() {
                       <th className="p-4 px-8 text-[10px] font-black uppercase tracking-widest text-foreground/30 border-b border-border">Member</th>
                       <th className="p-4 px-6 text-[10px] font-black uppercase tracking-widest text-foreground/30 border-b border-border">Role</th>
                       <th className="p-4 px-6 text-[10px] font-black uppercase tracking-widest text-foreground/30 border-b border-border text-right">Joined</th>
-                      <th className="p-4 px-8 text-[10px] font-black uppercase tracking-widest text-foreground/30 border-b border-border text-right">Manage</th>
+                      {canManage && <th className="p-4 px-8 text-[10px] font-black uppercase tracking-widest text-foreground/30 border-b border-border text-right">Manage</th>}
                     </tr>
                   </thead>
                   <tbody>
@@ -271,22 +271,24 @@ export default function TeamPage() {
                             {formatDate(member.createdAt)}
                           </span>
                         </td>
-                        <td className="p-4 px-8 align-middle text-right">
-                          <div className="flex items-center justify-end gap-2 md:opacity-0 group-hover:opacity-100 transition-opacity">
-                            {canManage && member.role !== 'OWNER' && member.user.email !== currentUser?.email && (
-                              <button 
-                                className="w-9 h-9 rounded-xl flex items-center justify-center text-foreground/30 hover:bg-error hover:text-white transition-all shadow-sm" 
-                                onClick={() => removeMember(member.id)}
-                                title="Remove member"
-                              >
-                                <Trash2 size={16} />
+                        {canManage && (
+                          <td className="p-4 px-8 align-middle text-right">
+                            <div className="flex items-center justify-end gap-2">
+                              {member.role !== 'OWNER' && member.user.email !== currentUser?.email && (
+                                <button 
+                                  className="w-9 h-9 rounded-xl flex items-center justify-center text-foreground/30 hover:bg-error hover:text-white transition-all shadow-sm" 
+                                  onClick={() => removeMember(member.id)}
+                                  title="Remove member"
+                                >
+                                  <Trash2 size={16} />
+                                </button>
+                              )}
+                              <button className="w-9 h-9 rounded-xl flex items-center justify-center text-foreground/20 hover:bg-surface-hover hover:text-foreground transition-all">
+                                <MoreVertical size={16} />
                               </button>
-                            )}
-                            <button className="w-9 h-9 rounded-xl flex items-center justify-center text-foreground/20 hover:bg-surface-hover hover:text-foreground transition-all">
-                              <MoreVertical size={16} />
-                            </button>
-                          </div>
-                        </td>
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>

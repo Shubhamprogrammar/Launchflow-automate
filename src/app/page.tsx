@@ -58,7 +58,7 @@ export default function Home() {
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/20">
               <Zap size={18} className="text-white fill-current" />
             </div>
-            <div className="font-bold text-2xl tracking-tight bg-gradient-to-br from-primary to-secondary bg-clip-text text-transparent">
+            <div className="font-bold text-2xl tracking-tight animate-gradient-text">
               LaunchFlow
             </div>
           </div>
@@ -80,9 +80,9 @@ export default function Home() {
         </div>
       </nav>
 
-      <main className="flex-1 pt-20">
+      <main className="flex-1 pt-6">
         {/* Hero Section */}
-        <section className="relative overflow-hidden pt-20 pb-32 lg:pt-32 lg:pb-48">
+        <section className="relative overflow-hidden pt-20 pb-20 lg:pt-32 lg:pb-36">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full -z-10 overflow-hidden">
             <div className="absolute top-[-10%] left-[10%] w-[40%] h-[40%] bg-primary/10 blur-[120px] rounded-full"></div>
             <div className="absolute bottom-[-10%] right-[10%] w-[40%] h-[40%] bg-secondary/10 blur-[120px] rounded-full"></div>
@@ -96,19 +96,19 @@ export default function Home() {
               </div>
               <h1 className="text-5xl lg:text-7xl font-extrabold leading-[1.05] tracking-tight m-0">
                 Ship your next SaaS <br />
-                <span className="bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent">faster than ever</span>
+                <span className="animate-gradient-text">faster than ever</span>
               </h1>
               <p className="text-xl text-foreground/70 max-w-[600px] leading-relaxed mx-auto lg:mx-0">
                 The modern platform where <span className="text-foreground font-semibold">organizations</span> can seamlessly manage their <span className="text-foreground font-semibold">workspaces</span>, teams, and global operations. Stop building infrastructure, start building your product.
               </p>
               <div className="flex flex-wrap justify-center lg:justify-start gap-4 mt-4">
                 <Link href="/auth/register">
-                  <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/25" rightIcon={<ArrowRight size={20} />}>
+                  <Button size="lg" className="h-14 px-8 text-lg shadow-xl shadow-primary/25 hover-lift" rightIcon={<ArrowRight size={20} />}>
                     Get Started Free
                   </Button>
                 </Link>
                 <Link href="#features">
-                  <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-surface/50 backdrop-blur-sm">
+                  <Button variant="outline" size="lg" className="h-14 px-8 text-lg bg-surface/50 backdrop-blur-sm hover-lift">
                     View Demo
                   </Button>
                 </Link>
@@ -121,7 +121,7 @@ export default function Home() {
                     </div>
                   ))}
                 </div>
-                <span>Trusted by <span className="font-bold text-foreground">500+</span> orgainsations</span>
+                <span>Trusted by <span className="font-bold text-foreground">500+</span> organizations</span>
               </div>
             </div>
 
@@ -129,8 +129,8 @@ export default function Home() {
                {/* Decorative background for card */}
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 blur-3xl -z-10 rounded-[40px]"></div>
               
-              <div className="relative group">
-                <Card className="glass border-white/20 shadow-2xl overflow-hidden transition-all duration-500 group-hover:scale-[1.02]">
+              <div className="relative group animate-scale-in">
+                <Card className="glass border-white/20 shadow-2xl overflow-hidden hover-lift">
                   <div className="h-2 bg-gradient-to-r from-primary via-accent to-secondary"></div>
                   <CardHeader className="bg-white/5">
                     <div className="flex items-center justify-between">
@@ -190,7 +190,7 @@ export default function Home() {
               { title: 'API Key Management', icon: <Key />, color: 'bg-cyan-500/10 text-cyan-500', desc: 'Let your users integrate with your platform using secure, revokable API keys.' },
               { title: 'Real-time Events', icon: <Cpu />, color: 'bg-green-500/10 text-green-500', desc: 'Centralized event bus for background tasks, notifications, and real-time updates.' },
             ].map((f, i) => (
-              <div key={i} className="group p-8 rounded-2xl border border-border bg-surface hover:border-primary/50 transition-all duration-300 hover:shadow-xl">
+              <div key={i} className={`group p-8 rounded-2xl border border-border bg-surface hover-lift animate-fade-in stagger-${(i % 5) + 1}`}>
                 <div className={`w-12 h-12 rounded-xl ${f.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                   {f.icon}
                 </div>
@@ -202,7 +202,7 @@ export default function Home() {
         </section>
 
         {/* Pricing Section */}
-        <section id="pricing" className="py-24">
+        <section id="pricing" className="py-16">
           <div className="container mx-auto px-6 text-center mb-16">
             <h2 className="text-4xl font-bold mb-4 tracking-tight">Simple, transparent pricing</h2>
             <p className="text-lg text-foreground/60">Choose the perfect plan for your business scale.</p>
@@ -210,7 +210,7 @@ export default function Home() {
 
           <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl">
             {/* Starter Plan */}
-            <Card className="flex flex-col border-border bg-surface hover:shadow-xl transition-shadow">
+            <Card className="flex flex-col border-border bg-surface hover-lift">
               <CardHeader className="text-center p-8">
                 <CardTitle className="text-lg text-primary font-bold">Starter</CardTitle>
                 <div className="text-4xl font-bold mt-4">$0 <span className="text-sm font-normal text-foreground/50">/ month</span></div>
@@ -230,7 +230,7 @@ export default function Home() {
             </Card>
 
             {/* Pro Plan */}
-            <Card className="flex flex-col border-primary relative shadow-2xl scale-105 z-10 bg-surface">
+            <Card className="flex flex-col border-primary relative shadow-2xl scale-105 z-10 bg-surface hover-lift">
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary text-white text-xs font-bold uppercase tracking-widest whitespace-nowrap shadow-lg">Most Popular</div>
               <CardHeader className="text-center p-8">
                 <CardTitle className="text-lg text-primary font-bold">Pro</CardTitle>
@@ -251,7 +251,7 @@ export default function Home() {
             </Card>
 
             {/* Team Plan */}
-            <Card className="flex flex-col border-border bg-surface hover:shadow-xl transition-shadow">
+            <Card className="flex flex-col border-border bg-surface hover-lift">
               <CardHeader className="text-center p-8">
                 <CardTitle className="text-lg text-primary font-bold">Team</CardTitle>
                 <div className="text-4xl font-bold mt-4">$15 <span className="text-sm font-normal text-foreground/50">/ month</span></div>
@@ -271,7 +271,7 @@ export default function Home() {
             </Card>
 
             {/* Enterprise Plan */}
-            <Card className="flex flex-col border-border bg-surface hover:shadow-xl transition-shadow">
+            <Card className="flex flex-col border-border bg-surface hover-lift">
               <CardHeader className="text-center p-8">
                 <CardTitle className="text-lg text-primary font-bold">Enterprise</CardTitle>
                 <div className="text-4xl font-bold mt-4">$25 <span className="text-sm font-normal text-foreground/50">/ month</span></div>
@@ -293,7 +293,7 @@ export default function Home() {
         </section>
 
         {/* FAQ Section */}
-        <section id="faq" className="py-24 bg-surface/30">
+        <section id="faq" className="py-16 bg-surface/30">
           <div className="container mx-auto px-6 max-w-4xl">
             <h2 className="text-3xl font-bold mb-12 text-center tracking-tight">Frequently Asked Questions</h2>
             <div className="space-y-6">

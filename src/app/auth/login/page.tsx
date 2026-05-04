@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, LogIn } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +10,9 @@ import { authClient } from '@/lib/auth-client';
 
 export default function LoginPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get('callbackURL') || '/dashboard';
+  
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +27,7 @@ export default function LoginPage() {
       const { error } = await authClient.signIn.email({
         email,
         password,
-        callbackURL: '/dashboard',
+        callbackURL: callbackURL,
       });
 
       if (error) {
@@ -32,7 +35,7 @@ export default function LoginPage() {
         return;
       }
 
-      router.push('/dashboard');
+      router.push(callbackURL);
     } catch (err: any) {
       setError('An unexpected error occurred. Please try again.');
     } finally {

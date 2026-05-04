@@ -57,7 +57,7 @@ CardDescription.displayName = 'CardDescription';
 export const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
   ({ className = '', children, ...props }, ref) => {
     return (
-      <div ref={ref} className={`p-6 pt-0 ${className}`} {...props}>
+      <div ref={ref} className={`p-6 pt-2 ${className}`} {...props}>
         {children}
       </div>
     );

@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Mail, Lock, User, LogIn } from 'lucide-react';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -10,6 +10,9 @@ import { authClient } from '@/lib/auth-client';
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackURL = searchParams.get('callbackURL') || '/dashboard';
+
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -26,7 +29,7 @@ export default function RegisterPage() {
         email,
         password,
         name,
-        callbackURL: `${window.location.origin}/dashboard`,
+        callbackURL: `${window.location.origin}${callbackURL}`,
       });
 
       if (error) {
@@ -34,7 +37,7 @@ export default function RegisterPage() {
         return;
       }
 
-      router.push(`/auth/verify-email?email=${encodeURIComponent(email)}`);
+      router.push(`/auth/verify-email?email=${encodeURIComponent(email)}&callbackURL=${encodeURIComponent(callbackURL)}`);
     } catch (err: any) {
       setError('An unexpected error occurred. Please try again.');
     } finally {

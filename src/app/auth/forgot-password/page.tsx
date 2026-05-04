@@ -19,8 +19,7 @@ export default function ForgotPasswordPage() {
     setIsLoading(true);
 
     try {
-      // Using direct API call to avoid client-side plugin type issues
-      await api.post('/auth/forget-password', {
+      await api.post('/auth/request-password-reset', {
         email,
         redirectTo: `${window.location.origin}/auth/reset-password`,
       });
