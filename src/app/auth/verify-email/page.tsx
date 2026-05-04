@@ -1,14 +1,14 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { Mail, ArrowLeft, ExternalLink, CheckCircle } from 'lucide-react';
+import { Mail, ArrowLeft, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { api } from '@/lib/api';
 
-export default function VerifyEmailPage() {
+function VerifyEmailForm() {
   const searchParams = useSearchParams();
   const emailParam = searchParams.get('email');
   
@@ -22,7 +22,6 @@ export default function VerifyEmailPage() {
     try {
       let email = emailParam;
 
-      // If no email in URL, try to get from session (fallback)
       if (!email) {
         const session = await api.get<{ user: { email: string } }>('/auth/get-session');
         email = session?.user?.email || null;
@@ -84,5 +83,13 @@ export default function VerifyEmailPage() {
         </Link>
       </div>
     </div>
+  );
+}
+
+export default function VerifyEmailPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <VerifyEmailForm />
+    </Suspense>
   );
 }
