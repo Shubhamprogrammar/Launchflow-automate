@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Key, Copy, Plus, Trash2, Eye, EyeOff, ShieldCheck, Clock } from 'lucide-react';
+import { Key, Copy, Plus, Trash2, Eye, EyeOff, ShieldCheck, Clock, Book, Code } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -25,6 +25,7 @@ export default function ApiKeysPage() {
   const [newKeyName, setNewKeyName] = useState('');
   const [newlyCreatedKey, setNewlyCreatedKey] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showDocs, setShowDocs] = useState(false);
 
   const fetchKeys = async () => {
     if (!activeWorkspace) return;
@@ -102,16 +103,26 @@ export default function ApiKeysPage() {
           <h1 className="text-3xl font-bold tracking-tight m-0">API Keys</h1>
           <p className="text-foreground/70 m-0">Programmatic access to your workspace</p>
         </div>
-        <Button 
-          leftIcon={<Plus size={18} />} 
-          onClick={() => {
-            setIsCreating(true);
-            setNewlyCreatedKey(null);
-          }}
-          disabled={!activeWorkspace}
-        >
-          Create New Key
-        </Button>
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="ghost"
+            leftIcon={<Book size={18} />} 
+            onClick={() => setShowDocs(!showDocs)}
+            className={showDocs ? 'bg-surface-hover text-primary' : ''}
+          >
+            {showDocs ? 'Hide Documentation' : 'View Documentation'}
+          </Button>
+          <Button 
+            leftIcon={<Plus size={18} />} 
+            onClick={() => {
+              setIsCreating(true);
+              setNewlyCreatedKey(null);
+            }}
+            disabled={!activeWorkspace}
+          >
+            Create New Key
+          </Button>
+        </div>
       </div>
 
       {newlyCreatedKey && (
@@ -243,6 +254,58 @@ export default function ApiKeysPage() {
           </div>
         </Card>
       </div>
+
+      {showDocs && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 animate-slide-up mt-4">
+          <Card className="border-primary/20 shadow-lg shadow-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Book size={20} className="text-primary" />
+                Quick Start Guide
+              </CardTitle>
+              <CardDescription>Learn how to use your API keys to interact with LaunchFlow</CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4 text-sm text-foreground/70">
+              <p>
+                LaunchFlow API keys are used to authenticate programmatic requests to our API. 
+                Each key is scoped to the current workspace and grants full access to its resources.
+              </p>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground">Authentication Header</h4>
+                <p>Include your API key in the request headers using the Authorization field:</p>
+                <code className="block p-3 bg-surface-hover rounded-md font-mono text-xs text-primary border border-primary/10">
+                  Authorization: Bearer YOUR_API_KEY
+                </code>
+              </div>
+            </CardContent>
+          </Card>
+
+          <Card className="border-primary/20 shadow-lg shadow-primary/5">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Code size={20} className="text-primary" />
+                Example Usage
+              </CardTitle>
+              <CardDescription>Standard implementation using cURL</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="relative group">
+                <code className="block p-4 bg-surface-hover rounded-lg font-mono text-xs leading-relaxed overflow-x-auto border border-primary/10">
+                  <span className="text-foreground/40"># Get workspace information</span><br/>
+                  curl -X GET "{process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/workspaces/me" \<br/>
+                  &nbsp;&nbsp;-H "Authorization: Bearer <span className="text-primary">YOUR_API_KEY</span>"
+                </code>
+                <button 
+                  onClick={() => copyToClipboard(`curl -X GET "${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/workspaces/me" -H "Authorization: Bearer YOUR_API_KEY"`)}
+                  className="absolute top-2 right-2 p-2 opacity-0 group-hover:opacity-100 transition-opacity bg-surface border border-border rounded-md shadow-sm hover:bg-surface-hover"
+                >
+                  <Copy size={14} />
+                </button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
