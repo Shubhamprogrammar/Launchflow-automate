@@ -1,6 +1,18 @@
 // API client utility
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const getApiBaseURL = () => {
+  const configuredApiURL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+
+  if (typeof window !== 'undefined') {
+    const isLocalhost = ['localhost', '127.0.0.1'].includes(window.location.hostname);
+
+    if (!isLocalhost) {
+      return '/api';
+    }
+  }
+
+  return configuredApiURL;
+};
 
 interface RequestOptions extends RequestInit {
   params?: Record<string, string>;
@@ -9,7 +21,7 @@ interface RequestOptions extends RequestInit {
 export async function fetchApi<T>(endpoint: string, options: RequestOptions = {}): Promise<T> {
   const { params, headers, ...customConfig } = options;
   
-  let url = `${API_BASE_URL}${endpoint}`;
+  let url = `${getApiBaseURL()}${endpoint}`;
   if (params) {
     url += '?' + new URLSearchParams(params).toString();
   }
