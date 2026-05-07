@@ -113,7 +113,7 @@ function DashboardLayoutInner({
           </div>
           <button 
             onClick={handleLogout} 
-            className="flex items-center justify-center gap-2 w-full p-2 rounded-md text-error text-sm font-medium transition-colors hover:bg-error/10"
+            className="flex items-center cursor-pointer justify-center gap-2 w-full p-2 rounded-md text-error text-sm font-medium transition-colors hover:bg-error/10"
           >
             <LogOut size={18} />
             <span>Sign out</span>
