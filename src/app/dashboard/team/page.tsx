@@ -1,8 +1,8 @@
 'use client';
 
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Users, UserPlus, MoreVertical, Shield, Mail, Trash2, Clock, CheckCircle2, Search, X } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { api } from '@/lib/api';
@@ -35,18 +35,18 @@ export default function TeamPage() {
   const [isInviting, setIsInviting] = useState(false);
   const [inviteEmail, setInviteEmail] = useState('');
   const [isSubmittingInvite, setIsSubmittingInvite] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [currentUser, setCurrentUser] = useState<{ id: string; name: string | null; email: string } | null>(null);
   const [currentUserRole, setCurrentUserRole] = useState<'OWNER' | 'ADMIN' | 'MANAGER' | 'MEMBER'>('MEMBER');
   
   // Search state
   const [searchQuery, setSearchQuery] = useState('');
 
-  const fetchTeamData = async () => {
+  const fetchTeamData = useCallback(async () => {
     if (!activeWorkspace) return;
     setIsLoading(true);
     try {
       const [sessionRes, membersRes, invitesRes] = await Promise.all([
-        api.get<{ user: any }>('/auth/get-session'),
+        api.get<{ user: { id: string; name: string | null; email: string } }>('/auth/get-session'),
         api.get<{ success: boolean; data: Member[] }>(`/workspaces/${activeWorkspace.id}/members`),
         api.get<{ success: boolean; data: Invite[] }>(`/invites/${activeWorkspace.id}`)
       ]);
@@ -71,11 +71,13 @@ export default function TeamPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeWorkspace]);
 
   useEffect(() => {
+    // Intentional: load team data when the workspace changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchTeamData();
-  }, [activeWorkspace]);
+  }, [fetchTeamData]);
 
   const canManage = currentUserRole === 'OWNER' || currentUserRole === 'ADMIN' || currentUserRole === 'MANAGER';
 
@@ -108,8 +110,8 @@ export default function TeamPage() {
         setInvites([response.data, ...invites]);
         alert('Invitation sent successfully!');
       }
-    } catch (err: any) {
-      alert(err.message || 'Failed to send invitation');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Failed to send invitation');
     } finally {
       setIsSubmittingInvite(false);
     }

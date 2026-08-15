@@ -38,7 +38,7 @@ function RegisterForm() {
       }
 
       router.push(`/auth/verify-email?email=${encodeURIComponent(email)}&callbackURL=${encodeURIComponent(callbackURL)}`);
-    } catch (err: any) {
+    } catch {
       setError('An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);

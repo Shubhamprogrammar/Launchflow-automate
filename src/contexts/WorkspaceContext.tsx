@@ -54,6 +54,8 @@ export function WorkspaceProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
+    // Intentional: load the user's workspaces once on mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     refreshWorkspaces();
   }, [refreshWorkspaces]);
 

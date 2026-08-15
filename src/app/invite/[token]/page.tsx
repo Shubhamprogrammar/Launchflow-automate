@@ -14,34 +14,13 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
   
   const [status, setStatus] = useState<'loading' | 'unauthenticated' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('Checking your invitation...');
-  const [session, setSession] = useState<any>(null);
-
-  useEffect(() => {
-    checkSession();
-  }, []);
-
-  const checkSession = async () => {
-    try {
-      const { data } = await authClient.getSession();
-      if (data) {
-        setSession(data.user);
-        acceptInvite();
-      } else {
-        setStatus('unauthenticated');
-        setMessage('You need to be logged in to accept this invitation.');
-      }
-    } catch (err) {
-      setStatus('unauthenticated');
-      setMessage('Please log in to accept the workspace invitation.');
-    }
-  };
 
   const acceptInvite = async () => {
     setStatus('loading');
     setMessage('Joining the workspace...');
     
     try {
-      const data = await api.post<any>(`/invites/accept/${token}`, {});
+      const data = await api.post<{ success: boolean; workspaceId: string }>(`/invites/accept/${token}`, {});
       
       // Set the joined workspace as active in localStorage so the dashboard shows it immediately
       if (data && data.workspaceId) {
@@ -55,11 +34,33 @@ export default function InvitePage({ params }: { params: Promise<{ token: string
       setTimeout(() => {
         router.push('/dashboard');
       }, 2000);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setStatus('error');
-      setMessage(err.message || 'Failed to accept the invitation. It may have expired or already been used.');
+      setMessage(err instanceof Error ? err.message : 'Failed to accept the invitation. It may have expired or already been used.');
     }
   };
+
+  const checkSession = async () => {
+    try {
+      const { data } = await authClient.getSession();
+      if (data) {
+        acceptInvite();
+      } else {
+        setStatus('unauthenticated');
+        setMessage('You need to be logged in to accept this invitation.');
+      }
+    } catch {
+      setStatus('unauthenticated');
+      setMessage('Please log in to accept the workspace invitation.');
+    }
+  };
+
+  useEffect(() => {
+    // Intentional: run the invite check once on mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    checkSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background p-4">

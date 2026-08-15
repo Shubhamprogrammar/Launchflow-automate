@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Check, CreditCard, Zap, Shield, ArrowRight, Loader2 } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Check, CreditCard, Zap, Shield, Loader2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { api } from '@/lib/api';
@@ -19,7 +19,7 @@ export default function BillingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isProcessing, setIsProcessing] = useState<string | null>(null);
 
-  const fetchSubscription = async () => {
+  const fetchSubscription = useCallback(async () => {
     if (!activeWorkspace) return;
     setIsLoading(true);
     try {
@@ -32,11 +32,13 @@ export default function BillingPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeWorkspace]);
 
   useEffect(() => {
+    // Intentional: load the current plan when the workspace changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchSubscription();
-  }, [activeWorkspace]);
+  }, [fetchSubscription]);
 
   const handleUpgrade = async (plan: 'PRO' | 'TEAM' | 'ENTERPRISE') => {
     if (!activeWorkspace) return;
@@ -47,7 +49,7 @@ export default function BillingPage() {
         plan
       });
       if (response.success && response.url) {
-        window.location.href = response.url;
+        window.location.assign(response.url);
       }
     } catch (err) {
       console.error('Failed to initiate checkout:', err);
@@ -65,11 +67,11 @@ export default function BillingPage() {
         workspaceId: activeWorkspace.id
       });
       if (response.success && response.url) {
-        window.location.href = response.url;
+        window.location.assign(response.url);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Failed to open customer portal:', err);
-      alert(err.message || 'Failed to open billing portal. You might need to subscribe to a plan first.');
+      alert(err instanceof Error ? err.message : 'Failed to open billing portal. You might need to subscribe to a plan first.');
     } finally {
       setIsProcessing(null);
     }
@@ -190,7 +192,6 @@ export default function BillingPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-4">
         {plans.map(plan => {
           const isCurrent = currentSubscription?.plan === plan.id || (plan.id === 'FREE' && !currentSubscription);
-          const isHigher = !isCurrent; // Simple check for demo
           
           return (
             <Card 
@@ -234,7 +235,7 @@ export default function BillingPage() {
                     variant={plan.popular ? 'primary' : 'outline'}
                     disabled={isCurrent || (isProcessing !== null && isProcessing !== plan.id)}
                     isLoading={isProcessing === plan.id}
-                    onClick={() => handleUpgrade(plan.id as any)}
+                    onClick={() => handleUpgrade(plan.id as 'PRO' | 'TEAM' | 'ENTERPRISE')}
                   >
                     {isCurrent ? 'Current Plan' : `Upgrade to ${plan.name}`}
                   </Button>

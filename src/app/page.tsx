@@ -8,15 +8,12 @@ import {
   CheckCircle2, 
   Zap, 
   Shield, 
-  BarChart3, 
   Loader2, 
   Users, 
   Key, 
-  Globe, 
   Cpu, 
   Layout, 
-  Star,
-  Check
+  Star
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn, FaXTwitter } from 'react-icons/fa6';
 import { Button } from '@/components/ui/Button';
@@ -28,7 +25,7 @@ export default function Home() {
   const [isCheckingAuth, setIsCheckingAuth] = useState(true);
 
   useEffect(() => {
-    api.get<any>('/auth/get-session')
+    api.get<{ user?: unknown }>('/auth/get-session')
       .then(res => {
         if (res && res.user) {
           router.replace('/dashboard');
@@ -177,7 +174,7 @@ export default function Home() {
           <div className="container mx-auto px-6 text-center mb-16">
             <h2 className="text-4xl lg:text-5xl font-bold mb-4 tracking-tight">Powerful tools, built-in</h2>
             <p className="text-lg text-foreground/60 max-w-[700px] mx-auto">
-              We've solved the repetitive parts of SaaS development so you can focus on your unique value.
+              We&apos;ve solved the repetitive parts of SaaS development so you can focus on your unique value.
             </p>
           </div>
 

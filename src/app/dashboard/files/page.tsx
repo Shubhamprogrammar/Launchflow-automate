@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useMemo } from 'react';
-import { File as FileIcon, Upload, Trash2, Download, Search, FileText, ImageIcon, Music, Video, MoreVertical, Loader2, Filter, X } from 'lucide-react';
+import React, { useState, useEffect, useRef, useMemo, useCallback } from 'react';
+import { File as FileIcon, Upload, Trash2, Download, Search, FileText, ImageIcon, Music, Video, Loader2, Filter, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -34,7 +34,7 @@ export default function FilesPage() {
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const fetchFiles = async () => {
+  const fetchFiles = useCallback(async () => {
     if (!activeWorkspace) return;
     setIsLoading(true);
     try {
@@ -47,11 +47,13 @@ export default function FilesPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeWorkspace]);
 
   useEffect(() => {
+    // Intentional: load files when the workspace changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchFiles();
-  }, [activeWorkspace]);
+  }, [fetchFiles]);
 
   // Filtering Logic
   const filteredFiles = useMemo(() => {

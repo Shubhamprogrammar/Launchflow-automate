@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Camera, Save, LogOut, Smartphone, Monitor, Laptop, Globe } from 'lucide-react';
+import { Camera, Save, Smartphone, Monitor, Laptop } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -71,9 +71,9 @@ export default function SettingsPage() {
         setUser(response.data);
         alert('Profile updated successfully!');
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      alert(err.message || 'Failed to update profile');
+      alert(err instanceof Error ? err.message : 'Failed to update profile');
     } finally {
       setIsSaving(false);
     }

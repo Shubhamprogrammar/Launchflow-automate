@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import { ChevronDown, Briefcase, Plus, Check } from 'lucide-react';
 import { useWorkspace } from '@/contexts/WorkspaceContext';
-import { Button } from '@/components/ui/Button';
 
 export function WorkspaceSwitcher() {
   const { workspaces, activeWorkspace, setActiveWorkspace } = useWorkspace();

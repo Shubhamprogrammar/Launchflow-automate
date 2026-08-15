@@ -56,7 +56,7 @@ export default function WorkspacesPage() {
         <Card className="border-primary ring-1 ring-primary animate-fade-in">
           <CardHeader>
             <CardTitle>Create a new workspace</CardTitle>
-            <CardDescription>Workspaces contain all your team's resources and settings.</CardDescription>
+            <CardDescription>Workspaces contain all your team&apos;s resources and settings.</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleCreateWorkspace} className="flex flex-col gap-6">
@@ -95,7 +95,7 @@ export default function WorkspacesPage() {
           <div className="flex flex-col gap-1">
             <h3 className="text-xl font-semibold m-0">No Workspaces Found</h3>
             <p className="text-foreground/60 max-w-[400px] m-0">
-              You haven't created or joined any workspaces yet. Create your first workspace to get started.
+              You haven&apos;t created or joined any workspaces yet. Create your first workspace to get started.
             </p>
           </div>
           <Button 

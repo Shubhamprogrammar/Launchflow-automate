@@ -26,6 +26,22 @@ interface User {
   emailVerified: boolean;
 }
 
+interface NavItem {
+  href: string;
+  label: string;
+  icon: React.ReactNode;
+}
+
+interface DashboardLayoutInnerProps {
+  children: React.ReactNode;
+  user: User | null;
+  handleLogout: () => void;
+  navItems: NavItem[];
+  isSidebarOpen: boolean;
+  setIsSidebarOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  pathname: string;
+}
+
 import { WorkspaceProvider, useWorkspace } from '@/contexts/WorkspaceContext';
 import { WorkspaceSwitcher } from '@/components/dashboard/WorkspaceSwitcher';
 
@@ -39,14 +55,14 @@ function DashboardLayoutInner({
   isSidebarOpen, 
   setIsSidebarOpen, 
   pathname 
-}: any) {
+}: DashboardLayoutInnerProps) {
   const { activeWorkspace } = useWorkspace();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     // Initial fetch for unread count
-    api.get<any[]>('/notifications')
+    api.get<{ read: boolean }[]>('/notifications')
       .then(data => {
         setUnreadCount(data?.filter(n => !n.read).length || 0);
       })
@@ -83,7 +99,7 @@ function DashboardLayoutInner({
 
         <nav className="flex-1 p-6 pt-2 overflow-y-auto flex flex-col gap-2">
           <div className="text-xs font-semibold uppercase tracking-wider text-foreground/50 mb-2">Main Menu</div>
-          {navItems.map((item: any) => {
+          {navItems.map((item) => {
             const isActive = item.href === '/dashboard' 
               ? pathname === '/dashboard' 
               : pathname === item.href || pathname.startsWith(`${item.href}/`);
@@ -134,7 +150,7 @@ function DashboardLayoutInner({
             </button>
             <div className="flex flex-col">
               <h2 className="text-lg font-semibold m-0 leading-tight">
-                {navItems.find((i: any) => pathname === i.href || pathname.startsWith(`${i.href}/`))?.label || 'Dashboard'}
+                {navItems.find((i) => pathname === i.href || pathname.startsWith(`${i.href}/`))?.label || 'Dashboard'}
               </h2>
               {activeWorkspace && (
                 <span className="text-xs text-foreground/50 lg:hidden">

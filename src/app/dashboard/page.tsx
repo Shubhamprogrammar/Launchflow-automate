@@ -19,7 +19,7 @@ interface AnalyticsData {
     apiKeys: number;
     jobs: number;
   };
-  latestUsers: any[];
+  latestUsers: unknown[];
 }
 
 interface ActivityLog {
@@ -27,7 +27,7 @@ interface ActivityLog {
   action: string;
   entityType: string;
   createdAt: string;
-  metadata?: any;
+  metadata?: Record<string, string>;
   actor?: {
     name: string | null;
     email: string;

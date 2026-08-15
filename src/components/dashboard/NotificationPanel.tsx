@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Bell, X, Check, CheckCheck, Info, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { Bell, X, Info, AlertTriangle, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { api } from '@/lib/api';
 
 interface Notification {
@@ -31,6 +31,8 @@ export function NotificationPanel({ isOpen, onClose }: { isOpen: boolean; onClos
 
   useEffect(() => {
     if (isOpen) {
+      // Intentional: refresh notifications each time the panel opens.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       fetchNotifications();
     }
   }, [isOpen]);

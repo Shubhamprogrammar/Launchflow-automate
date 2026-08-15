@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Key, Copy, Plus, Trash2, Eye, EyeOff, ShieldCheck, Clock, Book, Code } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Key, Copy, Plus, Trash2, ShieldCheck, Clock, Book, Code } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -27,7 +27,7 @@ export default function ApiKeysPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showDocs, setShowDocs] = useState(false);
 
-  const fetchKeys = async () => {
+  const fetchKeys = useCallback(async () => {
     if (!activeWorkspace) return;
     setIsLoading(true);
     try {
@@ -40,11 +40,13 @@ export default function ApiKeysPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [activeWorkspace]);
 
   useEffect(() => {
+    // Intentional: load API keys when the workspace changes.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchKeys();
-  }, [activeWorkspace]);
+  }, [fetchKeys]);
 
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -147,7 +149,7 @@ export default function ApiKeysPage() {
               </button>
             </div>
             <Button variant="outline" className="self-end" onClick={() => setNewlyCreatedKey(null)}>
-              I've saved my key
+              I&apos;ve saved my key
             </Button>
           </CardContent>
         </Card>
@@ -292,8 +294,8 @@ export default function ApiKeysPage() {
               <div className="relative group">
                 <code className="block p-4 bg-surface-hover rounded-lg font-mono text-xs leading-relaxed overflow-x-auto border border-primary/10">
                   <span className="text-foreground/40"># Get workspace information</span><br/>
-                  curl -X GET "{process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/workspaces/me" \<br/>
-                  &nbsp;&nbsp;-H "Authorization: Bearer <span className="text-primary">YOUR_API_KEY</span>"
+                  curl -X GET &quot;{process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/workspaces/me&quot; \<br/>
+                  &nbsp;&nbsp;-H &quot;Authorization: Bearer <span className="text-primary">YOUR_API_KEY</span>&quot;
                 </code>
                 <button 
                   onClick={() => copyToClipboard(`curl -X GET "${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api'}/workspaces/me" -H "Authorization: Bearer YOUR_API_KEY"`)}

@@ -25,8 +25,8 @@ export default function ForgotPasswordPage() {
       });
 
       setIsSent(true);
-    } catch (err: any) {
-      setError(err.message || 'An unexpected error occurred. Please try again.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'An unexpected error occurred. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -41,7 +41,7 @@ export default function ForgotPasswordPage() {
         <div className="flex flex-col gap-2">
           <h1 className="text-2xl font-bold tracking-tight m-0">Check your email</h1>
           <p className="text-foreground/70 m-0 max-w-sm">
-            We've sent a password reset link to <span className="font-semibold text-foreground">{email}</span>. 
+            We&apos;ve sent a password reset link to <span className="font-semibold text-foreground">{email}</span>. 
             Please check your inbox and spam folder.
           </p>
         </div>
@@ -66,10 +66,10 @@ export default function ForgotPasswordPage() {
         </Link>
         <h1 className="text-3xl font-bold tracking-tight m-0">Forgot password?</h1>
         <p className="text-foreground/70 m-0">
-          Enter your email and we'll send you a link to reset your password.
+          Enter your email and we&apos;ll send you a link to reset your password.
         </p>
         <p className="text-foreground/50 text-xs m-0 mt-1">
-          Note: If you signed up with Google or GitHub, you don't have a password. Please use social login instead.
+          Note: If you signed up with Google or GitHub, you don&apos;t have a password. Please use social login instead.
         </p>
       </div>
 

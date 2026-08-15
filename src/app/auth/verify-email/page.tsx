@@ -37,8 +37,8 @@ function VerifyEmailForm() {
       } else {
         setError('Could not find your email. Please try logging in again or sign up with a different email.');
       }
-    } catch (err: any) {
-      setError(err.message || 'Failed to resend verification email.');
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Failed to resend verification email.');
     } finally {
       setIsResending(false);
     }
@@ -52,7 +52,7 @@ function VerifyEmailForm() {
         </div>
         <h1 className="text-3xl font-bold tracking-tight m-0">Check your email</h1>
         <p className="text-foreground/70 m-0">
-          We've sent a verification link to your email address. Please click the link to activate your account.
+          We&apos;ve sent a verification link to your email address. Please click the link to activate your account.
         </p>
       </div>
 
@@ -61,7 +61,7 @@ function VerifyEmailForm() {
           {error && <div className="p-3 bg-error/10 text-error rounded-md text-sm border border-error/20 mb-2">{error}</div>}
           
           <p className="text-sm text-foreground/60 text-center m-0">
-            Didn't receive the email? Check your spam folder or click below to resend.
+            Didn&apos;t receive the email? Check your spam folder or click below to resend.
           </p>
           <Button 
             variant="outline" 

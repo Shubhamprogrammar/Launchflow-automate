@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <div className="hidden lg:flex flex-1 bg-gradient-to-br from-primary-hover to-primary relative overflow-hidden items-center justify-center p-16 text-white">
         <div className="relative z-10 max-w-[500px]">
           <p className="text-2xl leading-relaxed font-medium mb-8">
-            "LaunchFlow has completely transformed how we manage our internal operations. The built-in billing and member management saved us months of development time."
+            &quot;LaunchFlow has completely transformed how we manage our internal operations. The built-in billing and member management saved us months of development time.&quot;
           </p>
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-full bg-white/20"></div>
