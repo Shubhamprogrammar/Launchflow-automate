@@ -79,6 +79,7 @@ export default function FilesPage() {
     setUploadProgress(10);
     try {
       const presignRes = await api.post<{ success: boolean; data: { uploadUrl: string; fileUrl: string; key: string } }>('/uploads/presign', {
+        workspaceId: activeWorkspace.id,
         fileName: file.name,
         mimeType: file.type
       });
