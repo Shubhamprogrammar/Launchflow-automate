@@ -24,6 +24,7 @@ interface User {
   email: string;
   role: string;
   emailVerified: boolean;
+  image?: string | null;
 }
 
 interface NavItem {
@@ -119,9 +120,18 @@ function DashboardLayoutInner({
 
         <div className="p-6 border-t border-border flex flex-col gap-4 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-semibold text-lg shrink-0">
-              {user?.name?.charAt(0).toUpperCase() || 'U'}
-            </div>
+            {user?.image ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={user.image}
+                alt="Profile"
+                className="w-10 h-10 rounded-full object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center font-semibold text-lg shrink-0">
+                {user?.name?.charAt(0).toUpperCase() || 'U'}
+              </div>
+            )}
             <div className="flex-1 min-w-0">
               <div className="font-semibold text-sm truncate">{user?.name}</div>
               <div className="text-xs text-foreground/60 truncate">{user?.email}</div>
