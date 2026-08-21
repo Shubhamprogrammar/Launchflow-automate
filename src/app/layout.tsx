@@ -15,6 +15,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "LaunchFlow",
   description: "A platform where companies sign up and manage their internal operations.",
+  icons: {
+    icon: "/launchflow.png",
+    shortcut: "/launchflow.png",
+    apple: "/launchflow.png",
+  },
 };
 
 export default function RootLayout({
