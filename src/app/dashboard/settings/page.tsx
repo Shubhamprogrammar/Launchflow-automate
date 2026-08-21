@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Camera, Save, Smartphone, Monitor, Laptop } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Camera, Save, Smartphone, Monitor, Laptop, Loader2 } from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -22,7 +22,11 @@ interface User {
   id: string;
   name: string | null;
   email: string;
+  image: string | null;
 }
+
+const MAX_AVATAR_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_AVATAR_TYPES = ['image/png', 'image/jpeg', 'image/webp', 'image/gif'];
 
 export default function SettingsPage() {
   const [user, setUser] = useState<User | null>(null);
@@ -31,6 +35,8 @@ export default function SettingsPage() {
   const [devices, setDevices] = useState<Device[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -79,6 +85,49 @@ export default function SettingsPage() {
     }
   };
 
+  const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    e.target.value = ''; // allow re-selecting the same file later
+    if (!file) return;
+
+    if (!ALLOWED_AVATAR_TYPES.includes(file.type)) {
+      alert('Please choose a PNG, JPEG, WEBP, or GIF image.');
+      return;
+    }
+    if (file.size > MAX_AVATAR_SIZE) {
+      alert('Image must be under 5MB.');
+      return;
+    }
+
+    setIsUploadingAvatar(true);
+    try {
+      const presignRes = await api.post<{ success: boolean; data: { uploadUrl: string; fileUrl: string } }>(
+        '/users/me/avatar/presign',
+        { mimeType: file.type }
+      );
+      if (!presignRes.success) throw new Error('Failed to get upload URL');
+
+      const uploadRes = await fetch(presignRes.data.uploadUrl, {
+        method: 'PUT',
+        body: file,
+        headers: { 'Content-Type': file.type }
+      });
+      if (!uploadRes.ok) throw new Error('Image upload failed');
+
+      const updateRes = await api.patch<{ success: boolean; data: User }>('/users/me', {
+        image: presignRes.data.fileUrl
+      });
+      if (updateRes.success) {
+        setUser(updateRes.data);
+      }
+    } catch (err: unknown) {
+      console.error(err);
+      alert(err instanceof Error ? err.message : 'Failed to upload image');
+    } finally {
+      setIsUploadingAvatar(false);
+    }
+  };
+
   const revokeDevice = async (deviceId: string) => {
     if (!confirm('Are you sure you want to sign out from this device?')) return;
 
@@ -120,14 +169,35 @@ export default function SettingsPage() {
             <CardContent>
               <div className="flex flex-col sm:flex-row items-start gap-8">
                 <div className="relative flex items-center justify-center">
-                  <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-4xl font-semibold">
-                    {name?.charAt(0).toUpperCase() || user?.email.charAt(0).toUpperCase()}
-                  </div>
-                  <button className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-foreground hover:bg-surface-hover hover:text-primary transition-all cursor-pointer">
-                    <Camera size={16} />
+                  {user?.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={user.image}
+                      alt="Profile"
+                      className="w-24 h-24 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-24 h-24 rounded-full bg-gradient-to-br from-primary to-secondary text-white flex items-center justify-center text-4xl font-semibold">
+                      {name?.charAt(0).toUpperCase() || user?.email.charAt(0).toUpperCase()}
+                    </div>
+                  )}
+                  <input
+                    ref={avatarInputRef}
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp,image/gif"
+                    onChange={handleAvatarChange}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => avatarInputRef.current?.click()}
+                    disabled={isUploadingAvatar}
+                    className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-surface border border-border flex items-center justify-center text-foreground hover:bg-surface-hover hover:text-primary transition-all cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isUploadingAvatar ? <Loader2 size={16} className="animate-spin" /> : <Camera size={16} />}
                   </button>
                 </div>
-                
+
                 <form onSubmit={handleSave} className="flex-1 flex flex-col gap-6 w-full">
                   <Input 
                     label="Full Name" 
